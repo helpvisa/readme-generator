@@ -2,8 +2,8 @@
 .DS_Store
 
 # folder
-node_modules/ # node
-test/ # testing directory
+node_modules/
+test/
 
 # swap
 *.swp

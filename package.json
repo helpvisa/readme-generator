@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "inquirer": "^8.2.4"
+  },
+  "name": "readme-generator",
+  "version": "0.1.0",
+  "description": "Generate professional readmes as easily as 1-2-3.",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/helpvisa/readme-generator.git"
+  },
+  "author": "Dan Brackenbury",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/helpvisa/readme-generator/issues"
+  },
+  "homepage": "https://github.com/helpvisa/readme-generator#readme"
+}
