@@ -1,0 +1,9 @@
+# mac
+.DS_Store
+
+# folder
+node_modules/ # node
+test/ # testing directory
+
+# swap
+*.swp
