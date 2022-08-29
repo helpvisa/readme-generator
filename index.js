@@ -2,6 +2,8 @@
 // require    //
 //------------//
 const inquirer = require("inquirer"); // inquirer npm package
+const gen = require("./src/gen.js"); // generator
+const write = require("./src/writefile.js"); // filesystem writing
 
 //------------//
 // variables  //
@@ -234,11 +236,11 @@ const contributionPrompt = [
         }
     },
     { // they would like to write their own if they say no to the above!
-        type: "confirm",
+        type: "input",
         name: "customGuideline",
         message: "Please describe your contribution guidelines: ",
-        when: ({useCovenant}) => {
-            if (!useCovenant) {
+        when: ({useCovenant, confirmContribute}) => {
+            if (!useCovenant && confirmContribute) {
                 return true;
             } else {
                 return false;
@@ -485,8 +487,15 @@ inquireInit()
     .then(inquireFeature)
     .then(inquireContribution)
     .then(inquireTesting)
-    .then(data => {
-        console.log(data);
+    .then(dataSoFar => {
+        return gen(dataSoFar);
+    })
+    .then(newFile => {
+        return write(newFile, "./test/README.md");
+    })
+    .then(response => {
+        console.log(response.message);
+        console.log("Check your destination directory to open your ReadMe.");
     })
     .catch(error => {
         console.log(error);
