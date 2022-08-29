@@ -40,9 +40,22 @@ const initPrompt = [
 // explanations for installation
 const installationPrompt = [
     {
+        type: "confirm",
+        name: "installConfirm",
+        message: "Does your application need to be installed? ",
+        default: true
+    },
+    {
         type: "input",
         name: "installation",
         message: "Please describe how to install your project: ",
+        when: ({installConfirm}) => {
+            if (installConfirm) {
+                return true;
+            } else {
+                return false;
+            }
+        },
         validate: installInput => {
             if (installInput) {
                 return true;
@@ -204,7 +217,7 @@ const contributionPrompt = [
     {
         type: "confirm",
         name: "confirmContribute",
-        message: "Do you want to seek contributions from others? ",
+        message: "Are you seeking contributions from others? ",
         default: false
     },
     { // if user wants contributors, do they want a standard set of guidelines or their own?
@@ -268,8 +281,213 @@ const loopTestingPrompt = [ // loopable if necessary
 //------------//
 // functions  //
 //------------//
+// inquirer prompts
+// simple functions up top
+// for project / initialization
+const inquireInit = () => {
+    return inquirer.prompt(initPrompt);
+}
 
+// for installation
+const inquireInstall = data => {
+    return inquirer.prompt(installationPrompt)
+        .then(installData => {
+            // create an array to store this data, then pass it on
+            if (!data.installData) {
+                data.installData = [];
+            }
+            
+            data.installData = installData;
+            return data;
+        });
+}
+
+// for usage
+const inquireUsage = data => {
+    return inquirer.prompt(usagePrompt)
+        .then(usageData => {
+            // create an array to store this data, then pass it on
+            if (!data.usageData) {
+                data.usageData = [];
+            }
+            
+            data.usageData = usageData;
+            return data;
+        });
+}
+
+// for contribution guidelines
+const inquireContribution = data => {
+    return inquirer.prompt(contributionPrompt)
+        .then(contributionData => {
+            // create an array to store this data, then pass it on
+            if (!data.contributionData) {
+                data.contributionData = [];
+            }
+            
+            data.contributionData = contributionData;
+            return data;
+        });
+}
+
+// for license selection
+const inquireLicense = data => {
+    return inquirer.prompt(licensePrompt)
+        .then(licenseData => {
+            // create an array to store this data, then pass it on
+            if (!data.licenseData) {
+                data.licenseData = [];
+            }
+            
+            data.licenseData = licenseData;
+            return data;
+        });
+}
+
+// loopable functions down here
+// for images
+const inquireImage = data => {
+    // create a an array within the data to store the image references
+    if (!data.images) {
+        data.images = [];
+    }
+
+    // now prompt user
+    return inquirer.prompt(imagePrompt)
+        .then(imageData => {
+            // add this data to the images array
+            data.images.push(imageData);
+
+            // are they adding another image?
+            if (imageData.addNewPhoto) {
+                return inquireImage(data); // callback (loop)
+            } else {
+                return data; // else return the data
+            }
+        });
+}
+
+// for credit // collab
+const inquireCredit = data => {
+    return inquirer.prompt(initCreditPrompt)
+        .then(initData => {
+            // are we adding collaborators?
+            if (initData.initCollab) {
+                // let's prompt them in a loop
+                return loopCredit(data);
+            } else {
+                return data;
+            }
+        });
+}
+const loopCredit = data => { // this is a loopable function to be used in inquireCredit
+    // create an array to store collaborators
+    if (!data.credit) {
+        data.credit = [];
+    }
+
+    return inquirer.prompt(loopCreditPrompt)
+        .then(creditData => {
+            // add data to array of collaborators
+            data.credit.push(creditData);
+
+            // are they adding another collaborator?
+            if (creditData.addNewCollaborator) {
+                return loopCredit(data);
+            } else {
+                return data;
+            }
+        });
+}
+
+// for feature listing
+const inquireFeature = data => {
+    return inquirer.prompt(initFeaturePrompt)
+        .then(initData => {
+            // are we adding features?
+            if (initData.initFeature) {
+                // let's prompt them in a loop
+                return loopFeature(data);
+            } else {
+                return data;
+            }
+        });
+}
+const loopFeature= data => { // this is a loopable function to be used in inquireFeature
+    // create an array to store features
+    if (!data.features) {
+        data.features = [];
+    }
+
+    return inquirer.prompt(loopFeaturePrompt)
+        .then(featureData => {
+            // add data to array of features
+            data.features.push(featureData);
+
+            // are they adding another feature?
+            if (featureData.addNewFeature) {
+                return loopFeature(data);
+            } else {
+                return data;
+            }
+        });
+}
+
+// for test listing
+const inquireTesting = data => {
+    return inquirer.prompt(initTestingPrompt)
+        .then(initData => {
+            // are we adding collaborators?
+            if (initData.initTesting) {
+                // let's prompt them in a loop
+                return loopTesting(data);
+            } else {
+                return data;
+            }
+        });
+}
+const loopTesting = data => { // this is a loopable function to be used in inquireTesting
+    // create an array to store tests
+    if (!data.tests) {
+        data.tests = [];
+    }
+
+    return inquirer.prompt(loopTestingPrompt)
+        .then(testData => {
+            // add data to array of tests
+            data.tests.push(testData);
+
+            // are they adding another test?
+            if (testData.addNewTest) {
+                return loopTesting(data);
+            } else {
+                return data;
+            }
+        });
+}
 
 //------------//
 // init       //
 //------------//
+// main program
+inquireInit()
+    .then(inquireInstall)
+    .then(inquireUsage)
+    .then(dataSoFar => {
+        if (dataSoFar.usageData.addImage) {
+            return inquireImage(dataSoFar);
+        } else {
+            return dataSoFar;
+        }
+    })
+    .then(inquireCredit)
+    .then(inquireLicense)
+    .then(inquireFeature)
+    .then(inquireContribution)
+    .then(inquireTesting)
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.log(error);
+    });
