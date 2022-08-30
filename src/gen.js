@@ -17,6 +17,7 @@ ${tocCredit(data)}
 ${tocContribution(data)}
 - [License](#license)
 ${tocTests(data)}
+${tocQuestions(data)}
 
 ${installSection(data)}
 
@@ -37,6 +38,8 @@ ${contributionSection(data)}
 ${data.licenseData.license}
 
 ${testingSection(data)}
+
+${questionSection(data)}
 `
 
     // return this string and the user data in an array
@@ -62,6 +65,14 @@ function tocContribution(data) {
         return "";
     } else {
         return "- [Contributing](#contributing)";
+    }
+}
+
+function tocQuestions(data) {
+    if (!data.contactData.confirmQuestions) {
+        return "";
+    } else {
+        return "- [Questions](#questions)";
     }
 }
 
@@ -130,6 +141,19 @@ function contributionSection(data) {
 ${data.contributionData.customGuideline}
 `
         }
+    }
+}
+
+// contact
+function questionSection(data) {
+    if (data.contactData.confirmQuestions) {
+        return `
+## Questions
+
+Have questions regarding the project? Feel free to contact me at ${data.contactData.email}.
+`
+    } else {
+        return "";
     }
 }
 
