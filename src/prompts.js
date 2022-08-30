@@ -24,6 +24,19 @@ const initPrompt = [
     },
     {
         type: "input",
+        name: "name",
+        message: "What is your name? This will be used for licensing: ",
+        validate: nameInput => {
+            if (nameInput) {
+                return true;
+            } else {
+                console.log("Please enter a name.");
+                return false;
+            }
+        }
+    },
+    {
+        type: "input",
         name: "project",
         message: "What is the name of your project? ",
         validate: projInput => {
@@ -184,10 +197,10 @@ const loopCreditPrompt = [ // recursive check (can be called again and again)
 // select a license
 const licensePrompt = [
     {
-        type: "checkbox",
+        type: "list",
         name: "license",
         message: "Please select a license for your project: ",
-        choices: ["MIT", "ISC"]
+        choices: ["MIT", "ISC", "APACHE"]
     }
 ];
 

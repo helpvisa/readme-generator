@@ -1,6 +1,14 @@
 // generates the readme from template
+
+// main generation function
 const generateReadme = data => {
-    let readme =
+    return new Promise((resolve, reject) => {
+        // reject promise if no data
+        if (!data) {
+            reject("No data.");
+        }
+
+        let readme =
 `
 # ${data.project}
 
@@ -15,9 +23,9 @@ ${tocImages(data)}
 ${tocFeatures(data)}
 ${tocCredit(data)}
 ${tocContribution(data)}
-- [License](#license)
 ${tocTests(data)}
 ${tocQuestions(data)}
+- [License](#license)
 
 ${installSection(data)}
 
@@ -33,18 +41,24 @@ ${creditSection(data)}
 
 ${contributionSection(data)}
 
-## License
-
-${data.licenseData.license}
-
 ${testingSection(data)}
 
 ${questionSection(data)}
+
+## License
+
+${data.licenseData.licenseText}
 `
 
-    // return this string and the user data in an array
-    let returnArray = [readme, data];
-    return returnArray;
+        // create object of return data
+        let returnData = {
+            file: readme,
+            saveLocation: data.saveLocation
+        };
+
+        // resolve promise and return object
+        resolve(returnData);
+    });
 }
 
 //------------//
@@ -242,5 +256,7 @@ function testingSection(data) {
     }
 }
 
-// export
+//--------//
+// export //
+//--------//
 module.exports = generateReadme;
