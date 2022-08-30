@@ -1,7 +1,7 @@
 // require built-in node file writing package
 const fs = require("fs");
 
-// these functions rewrite the default fs functionality to be asynchronous
+// wraps writeFile function to work better in the promise chain used in index.js
 const writeFile = (content, dest) => {
     return new Promise((resolve, reject) => {
         fs.writeFile(dest, content, err => {
