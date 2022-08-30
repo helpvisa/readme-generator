@@ -11,6 +11,7 @@ const generateReadme = data => {
         let readme =
 `
 # ${data.project}
+${licenseBadge(data)}
 
 ## Description
 
@@ -21,7 +22,7 @@ ${tocInstallation(data)}
 - [Usage](#usage)
 ${tocImages(data)}
 ${tocFeatures(data)}
-${tocCredit(data)}
+- [Credits](#credits)
 ${tocContribution(data)}
 ${tocTests(data)}
 ${tocQuestions(data)}
@@ -106,14 +107,6 @@ function tocFeatures(data) {
     }
 }
 
-function tocCredit(data) {
-    if (data.credit) {
-        return "- [Credits](#credits)"
-    } else {
-        return "";
-    }
-}
-
 function tocTests(data) {
     if (data.tests) {
         return "- [Tests](#tests)";
@@ -146,7 +139,7 @@ function contributionSection(data) {
             return `
 ## Contributing
 
-<COVENANT GOES HERE>
+[This project uses the standard Contributor Covenant.](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.txt)
 `
         } else {
         return `
@@ -164,7 +157,7 @@ function questionSection(data) {
         return `
 ## Questions
 
-Have questions regarding the project? Feel free to contact me at ${data.contactData.email}.
+Have questions regarding the project? Feel free to contact me at ${data.contactData.email} or [here on GitHub](https://github.com/${data.githubUsername}).
 `
     } else {
         return "";
@@ -215,23 +208,24 @@ function featureSection(data) {
 
 // credits
 function creditSection(data) {
-    let creditText = "";
-    if (data.credit) {
-        creditText = `
+    let creditText = `
 ## Credits
 
-Created in tandem with: 
-`
+Created by [${data.name}](https://github.com/${data.githubUsername})`
+    if (data.credit) {
+        creditText += " in tandem with: "
         data.credit.forEach(credit => {
             let newCredit = `
-- [${credit.creditName}](${credit.creditUsername})
+- [${credit.creditName}](https://github.com/${credit.creditUsername})
 
 `
             creditText += newCredit;
         });
         return creditText;
     } else {
-        return "";
+        creditText += `.
+`
+        return creditText;
     }
 }
 
@@ -254,6 +248,30 @@ function testingSection(data) {
     } else {
         return "";
     }
+}
+
+// handle adding license badge
+function licenseBadge(data) {
+    // type of chosen license (MIT, ISC, or APACHE)
+    let type = data.licenseData.license;
+    let addedBadge = "";
+
+    // switch statement to pick badge
+    switch(type) {
+        case "MIT":
+            addedBadge = "[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)";
+            break;
+        case "ISC":
+            addedBadge = "[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)"
+            break;
+        case "APACHE":
+            addedBadge = "[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)"
+            break;
+        default:
+            break;
+    }
+
+    return addedBadge;
 }
 
 //--------//

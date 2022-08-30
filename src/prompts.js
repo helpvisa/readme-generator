@@ -25,12 +25,25 @@ const initPrompt = [
     {
         type: "input",
         name: "name",
-        message: "What is your name? This will be used for licensing: ",
+        message: "What is your name? This will be used for licensing and credit: ",
         validate: nameInput => {
             if (nameInput) {
                 return true;
             } else {
                 console.log("Please enter a name.");
+                return false;
+            }
+        }
+    },
+    {
+        type: "input",
+        name: "githubUsername",
+        message: "What is your GitHub username?",
+        validate: usernameInput => {
+            if (usernameInput) {
+                return true;
+            } else {
+                console.log("Please enter a username.");
                 return false;
             }
         }
