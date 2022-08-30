@@ -13,6 +13,19 @@ const write = require("./src/writefile.js"); // filesystem writing
 const initPrompt = [
     {
         type: "input",
+        name: "saveLocation",
+        message: "Where would you like to save your readme? (ex/ ~/Programs/MyProgram/README.md) ",
+        validate: saveInput => {
+            if (saveInput) {
+                return true;
+            } else {
+                console.log("Please enter a place to save your file.");
+                return false;
+            }
+        }
+    },
+    {
+        type: "input",
         name: "project",
         message: "What is the name of your project? ",
         validate: projInput => {
@@ -490,8 +503,8 @@ inquireInit()
     .then(dataSoFar => {
         return gen(dataSoFar);
     })
-    .then(newFile => {
-        return write(newFile, "./test/README.md");
+    .then(genData => {
+        return write(genData[0], genData[1].saveLocation);
     })
     .then(response => {
         console.log(response.message);

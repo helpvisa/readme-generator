@@ -13,7 +13,7 @@ ${tocInstallation(data)}
 - [Usage](#usage)
 ${tocImages(data)}
 ${tocFeatures(data)}
-- [Credits](#credits)
+${tocCredit(data)}
 ${tocContribution(data)}
 - [License](#license)
 ${tocTests(data)}
@@ -28,9 +28,7 @@ ${imageSection(data)}
 
 ${featureSection(data)}
 
-## Credits
-
-<PLACEHOLDER FOR FUNCTION>
+${creditSection(data)}
 
 ${contributionSection(data)}
 
@@ -41,8 +39,9 @@ ${data.licenseData.license}
 ${testingSection(data)}
 `
 
-    // return this string
-    return readme;
+    // return this string and the user data in an array
+    let returnArray = [readme, data];
+    return returnArray;
 }
 
 //------------//
@@ -77,6 +76,14 @@ function tocImages(data) {
 function tocFeatures(data) {
     if (data.features) {
         return "- [Features](#features)";
+    } else {
+        return "";
+    }
+}
+
+function tocCredit(data) {
+    if (data.credit) {
+        return "- [Credits](#credits)"
     } else {
         return "";
     }
@@ -163,6 +170,28 @@ function featureSection(data) {
             featureText += newFeature;
         });
         return featureText;
+    } else {
+        return "";
+    }
+}
+
+// credits
+function creditSection(data) {
+    let creditText = "";
+    if (data.credit) {
+        creditText = `
+## Credits
+
+Created in tandem with: 
+`
+        data.credit.forEach(credit => {
+            let newCredit = `
+- [${credit.creditName}](${credit.creditUsername})
+
+`
+            creditText += newCredit;
+        });
+        return creditText;
     } else {
         return "";
     }
